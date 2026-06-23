@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.HttpLogging;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +8,16 @@ builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHttpLogging(options =>
+{
+    options.LoggingFields =
+        HttpLoggingFields.RequestMethod |
+        HttpLoggingFields.RequestPath |
+        HttpLoggingFields.ResponseStatusCode;
+});
+builder.Services
+    .AddAuthentication("Bearer");
+
 
 var app = builder.Build();
 
@@ -16,6 +28,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+
+app.UseHttpLogging();
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseExceptionHandler("/error");
+
 
 app.UseHttpsRedirection();
 app.MapControllers();
