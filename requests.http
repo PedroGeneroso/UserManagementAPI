@@ -9,7 +9,7 @@ Content-Type: application/json
 
 {
   "name": "Ash Johnson",
-  "userAge": 42
+  "userAge":
 }
 
 ###
