@@ -1,1 +1,76 @@
-GET http://localhost:5082/weatherforecast
+###
+GET http://localhost:5082/users
+
+###
+POST http://localhost:5082/users
+Content-Type: application/json  
+
+{
+  "name": "Ash Johnson"
+}
+
+###
+POST http://localhost:5082/users
+Content-Type: application/json  
+
+{
+  "name": "Ash Johnson",
+  "userAge": -2
+}
+
+###
+POST http://localhost:5082/users
+Content-Type: application/json  
+
+{
+  "name": "  ",
+  "userAge": 42
+}
+
+###
+POST http://localhost:5082/users
+Content-Type: application/json  
+
+{
+  "name": "Brennan Lee Mulligan",
+  "userAge": 42
+}
+
+###
+POST http://localhost:5082/users
+Content-Type: application/json  
+
+{
+  "name": "Ash Johnson",
+  "userAge": 42
+}
+
+###
+PUT http://localhost:5082/users/3
+Content-Type: application/json
+
+{
+  "name": "Ashley Johnson",
+  "userAge": 42
+}
+
+###
+PUT http://localhost:5082/users/3
+Content-Type: application/json
+
+{
+  "name": "",
+  "userAge": 42
+}
+
+###
+PUT http://localhost:5082/users/3
+Content-Type: application/json
+
+{
+  "name": "Ashley Johnson",
+  "userAge": 42
+}
+
+###
+DELETE http://localhost:5082/users/3
