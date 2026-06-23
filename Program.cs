@@ -31,6 +31,18 @@ app.MapGet("/users", () => users)
 
 app.MapPost("/users", (User user) =>
 {
+    if (string.IsNullOrWhiteSpace(user.Name))
+    {
+        return Results.BadRequest("Name is required.");
+    }
+    if (user.UserAge < 0)
+    {
+        return Results.BadRequest("UserAge must be a non-negative integer.");
+    }
+    if (users.Any(u => u.Name.Equals(user.Name, StringComparison.OrdinalIgnoreCase)))
+    {
+        return Results.Conflict("A user with the same name already exists.");
+    }
     user.Id = users.Count +1;
     users.Add(user);
     return Results.Created($"/users/{user.Id}", user);
@@ -42,6 +54,18 @@ app.MapPut("/users/{id}", (int id, User updatedUser) =>
     if (user is null)
     {
         return Results.NotFound();
+    }
+    if (string.IsNullOrWhiteSpace(updatedUser.Name))
+    {
+        return Results.BadRequest("Name is required.");
+    }
+    if (updatedUser.UserAge < 0)
+    {
+        return Results.BadRequest("UserAge must be a non-negative integer.");
+    }
+    if (users.Any(u => u.Id != id && u.Name.Equals(updatedUser.Name, StringComparison.OrdinalIgnoreCase)))
+    {
+        return Results.Conflict("A user with the same name already exists.");
     }
     user.Name = updatedUser.Name;
     user.UserAge = updatedUser.UserAge;
