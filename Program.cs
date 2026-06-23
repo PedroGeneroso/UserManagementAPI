@@ -58,10 +58,6 @@ app.MapPost("/users", (User user) =>
     {
         return Results.BadRequest("UserAge must be a non-negative integer.");
     }
-    if (user.UserAge == null)
-    {
-        return Results.BadRequest("UserAge is required.");
-    }
     if (users.Any(u => u.Name.Equals(user.Name, StringComparison.OrdinalIgnoreCase)))
     {
         return Results.Conflict("A user with the same name already exists.");
