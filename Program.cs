@@ -20,28 +20,52 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.MapControllers();
 
-var summaries = new[]
+var users = new List<User>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+    new User { Id = 1, Name = "Brennan Lee Mulligan", UserAge = 38 },
+    new User { Id = 2, Name = "Isabella Roland", UserAge = 31 }
 };
 
-app.MapGet("/weatherforecast", () =>
+app.MapGet("/users", () => users)
+    .WithName("GetUsers");
+
+app.MapPost("/users", (User user) =>
 {
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
+    user.Id = users.Count +1;
+    users.Add(user);
+    return Results.Created($"/users/{user.Id}", user);
+}).WithName("CreateUser");
+
+app.MapPut("/users/{id}", (int id, User updatedUser) =>
+{
+    var user = users.FirstOrDefault(u => u.Id == id);
+    if (user is null)
+    {
+        return Results.NotFound();
+    }
+    user.Name = updatedUser.Name;
+    user.UserAge = updatedUser.UserAge;
+    return Results.Ok(user);
 })
-.WithName("GetWeatherForecast");
+.WithName("UpdateUser");
+
+app.MapDelete("/users/{id}", (int id) =>
+{
+    var user = users.FirstOrDefault(u => u.Id == id);
+    if (user is null)
+    {
+        return Results.NotFound();
+    }
+    users.Remove(user);
+    return Results.NoContent();
+}).WithName("DeleteUser");
 
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+public class User
 {
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    public int Id {get; set;}
+    public string Name {get; set;}
+    public int? UserAge {get; set;}
 }
+
